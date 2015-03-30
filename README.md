@@ -1,5 +1,20 @@
-# Dublin Bus Tracker
+# dublin-bus-tracker
 
-A simple web-based dashboard that lets let interested parties know when the next bus will be at the desired stop.
+> "Never miss your next Dublin Bus again!"
+>
+> &mdash; <cite>Anonymous user</cite>
 
-It is composed by a `node.js` backend that talks to Dublin Bus's RTPI service and a very simple front-end that shows in how much time a given bus will be at the desired stop.
+You will never be missing again your Dublin Bus ride! This web application shows the due time for your next ride a warns you when time is running out.
+The backend will keep an eye for you at the expected times at your preferred stop. Any update will be instantly pushed to your screen!
+
+## Running the app
+
+Jump start your node.js backend:
+
+$ npm start
+
+Then point your browser at http://localhost:3000
+
+## Cloud hosted version
+
+Due to public demand, we might consider offering a public could hosted version of the application.
