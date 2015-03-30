@@ -11,9 +11,11 @@ The backend will keep an eye for you at the expected times at your preferred sto
 
 Jump start your node.js backend:
 
+```
 $ npm start
+```
 
-Then point your browser at http://localhost:3000
+Then point your browser at [http://localhost:3000](http://localhost:3000)
 
 ## Cloud hosted version
 
