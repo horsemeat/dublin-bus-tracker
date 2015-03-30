@@ -47,7 +47,11 @@ function pushBuses() {
   });
 }
 
-server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
+// Allow the server to run both from Cloud9 and from OpenShift.
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000;
+var server_ip = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || '127.0.0.1';
+
+server.listen(server_port, server_ip, function(){
   var addr = server.address();
   console.log("Bus server listening at", addr.address + ":" + addr.port);
   setInterval(pushBuses, 30000)

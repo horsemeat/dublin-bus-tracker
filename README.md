@@ -1,5 +1,7 @@
 # dublin-bus-tracker
 
+[![Build Status](https://secure.travis-ci.org/horsemeat/dublin-bus-tracker.png)](http://travis-ci.org/horsemeat/dublin-bus-tracker)
+
 > "Never miss your next Dublin Bus again!"
 >
 > &mdash; <cite>Anonymous user</cite>
