@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "postinstall": "bower install"
+    "build": "HOME=$HOME/app-root/runtime bower install --config.interactive=false"
   },
   "repository": {
     "type": "git",
