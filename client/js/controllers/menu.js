@@ -8,7 +8,12 @@
 (function(angular, undefined) {
     'use strict';
     
-    angular.module('DublinBusTrackerApp').controller('MenuController', ['$scope', function($scope) {
+    angular.module('DublinBusTrackerApp').controller('MenuController', ['$scope', '$window', '$localStorage', function($scope, $window, $localStorage) {
+        $scope.$storage = $localStorage.$default({
+            busName: '41c',
+            stopId: '3705',
+            warningTime: 10
+        });
     }]);
 
 })(angular);

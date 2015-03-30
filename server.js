@@ -36,6 +36,7 @@ function getAllBuses(stop, bus_number, result_callback) {
   });
 }
 
+router.use('/bower_components',  express.static(__dirname + '/bower_components'));
 router.use(express.static(path.resolve(__dirname, 'client')));
 var sockets = [];
 
