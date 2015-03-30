@@ -10,16 +10,20 @@
     "type": "git",
     "url": "https://github.com/horsemeat/dublin-bus-tracker.git"
   },
-  "contributors": [{ 
-    "name" : "Andrea Spadaccini",
-    "email" : "andrea.spadaccini@gmail.com"
-  }, {
-    "name" : "Antonino Parisi",
-    "email" : "tabman83@gmail.com"
-  }, {
-    "name" : "Giuseppe Petralia",
-    "email" : "peppepetra@gmail.com"
-  }],
+  "contributors": [
+    {
+      "name": "Andrea Spadaccini",
+      "email": "andrea.spadaccini@gmail.com"
+    },
+    {
+      "name": "Antonino Parisi",
+      "email": "tabman83@gmail.com"
+    },
+    {
+      "name": "Giuseppe Petralia",
+      "email": "peppepetra@gmail.com"
+    }
+  ],
   "dependencies": {
     "async": "~0.2.8",
     "cheerio": "^0.19.0",
@@ -27,7 +31,9 @@
     "request": "^2.54.0",
     "socket.io": "~0.9.14"
   },
-  "scripts": {
-    "start": "node server.js"
+  "devDependencies": {
+    "FileReader": "^0.10.2",
+    "mocha": "^2.2.1",
+    "nock": "^1.4.0"
   }
 }
