@@ -6,6 +6,7 @@ var express = require('express');
 var request = require('request');
 var cheerio = require('cheerio');
 var socketio = require('socket.io');
+var moment = require('moment');
 
 var router = express();
 var server = http.createServer(router);
@@ -13,6 +14,11 @@ var io = socketio.listen(server);
 
 var messages = [];
 var sockets = [];
+
+function getInterval(time) {
+  var bus_time = (moment(time, "HH:mm").unix() - moment().unix()) * 1000;
+  return moment.duration(bus_time).humanize();
+}
 
 function getAllBuses(stop, bus_number, result_callback) {
   var url_template = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=";
@@ -23,13 +29,21 @@ function getAllBuses(stop, bus_number, result_callback) {
     console.log("after load");
     $("#rtpi-results tr").each(function(i, tr) {
       var bus = $(tr).find("td").eq(0).text().trim();
-      var time = $(tr).find("td").eq(2).text().trim();
+      
+      // Skip unwanted rows.
       if (bus === bus_number) {
-        if (time === "Due") {
-          results.push(new Date().getHours() + ":" + new Date().getMinutes())
-        } else {
-          results.push(time);
+        var expected_time = $(tr).find("td").eq(2).text().trim();
+        if (expected_time === "Due") {
+          expected_time = new Date().getHours() + ":" + new Date().getMinutes();
         }
+        var expected_wait = getInterval(expected_time);
+        var return_object = {
+          "busName": bus,
+          "stopId": stop,
+          "expectedTime": expected_time,
+          "expectedWait": expected_wait
+        };
+        results.push(return_object);
       }
     });
     result_callback(results);

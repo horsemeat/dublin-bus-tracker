@@ -48,7 +48,7 @@
     <div class="container-fluid" ng-controller="MainController">
       <div class="row">
         <h1 ng-cloak>{{next_bus_time}}</h1>
-        <h2 ng-cloak ng-repeat="bus_time in all_bus_times">{{bus_time}}</h2>
+        <h2 ng-cloak ng-repeat="bus_time in all_bus_times">{{bus_time.expectedWait}}</h2>
       </div>
     </div>
 

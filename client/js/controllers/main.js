@@ -7,13 +7,6 @@
 
 (function(angular, undefined) {
     'use strict';
-    
-    
-    function getInterval(time) {
-        var bus_time = (moment(time, "HH:mm").unix() - moment().unix()) * 1000;
-        return moment.duration(bus_time).humanize();
-    }
-    
     angular.module('DublinBusTrackerApp').controller('MainController', ['$scope', 'webSocket', function($scope, webSocket) {
         
         //var socket = io.connect();
@@ -29,8 +22,8 @@
           console.log(msg);
           if (msg.length > 0) {
             $scope.$apply(function() {
-              $scope.next_bus_time = getInterval(msg[0])
-              $scope.all_bus_times = msg.slice(1).map(getInterval);
+              $scope.next_bus_time = msg[0].expectedWait;
+              $scope.all_bus_times = msg.slice(1);
             })
           }
         });
