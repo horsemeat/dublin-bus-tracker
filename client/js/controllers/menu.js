@@ -9,10 +9,6 @@
     'use strict';
     
     angular.module('DublinBusTrackerApp').controller('MenuController', ['$scope', function($scope) {
-        
-
-        
     }]);
 
-    
 })(angular);
