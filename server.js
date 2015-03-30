@@ -28,7 +28,7 @@ function getAllBuses(stop, bus_number, result_callback) {
         if (time === "Due") {
           results.push(new Date().getHours() + ":" + new Date().getMinutes())
         } else {
-          results.push($(tr).find("td").eq(2).text().trim());
+          results.push(time);
         }
       }
     });
