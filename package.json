@@ -5,13 +5,13 @@
   "main": "server.js",
   "repository": "https://github.com/horsemeat/dublin-bus-tracker.git",
   "contributors": [{ 
-    "name" : "Andrea Spadaccini"
+    "name" : "Andrea Spadaccini",
     "email" : "spadaccio@google.com"
   }, {
-    "name" : "Antonino Parisi"
+    "name" : "Antonino Parisi",
     "email" : "tabman83@gmail.com"
   }, {
-    "name" : "Giuseppe Petralia"
+    "name" : "Giuseppe Petralia",
     "email" : "peppepetra@gmail.com"
   }]
   "dependencies": {
