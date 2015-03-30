@@ -3,7 +3,7 @@
   * @author      Antonino Parisi <tabman83@gmail.com>
   * @date        30/03/2015 13:35
   * @description Menu controller
-  */g
+  */
 
 (function(angular, undefined) {
     'use strict';
