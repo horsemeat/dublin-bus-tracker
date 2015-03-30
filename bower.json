@@ -1,0 +1,22 @@
+{
+  "name": "dublin-bus-tracker",
+  "version": "0.2.0",
+  "homepage": "https://github.com/horsemeat/dublin-bus-tracker",
+  "authors": [
+    "Antonino Parisi <tabman83@gmail.com>"
+  ],
+  "description": "Simple app to show the next Dublin Bus on a dashboard",
+  "license": "GNU AFFERO GENERAL PUBLIC LICENSE",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-drawer": "~1.0.1",
+    "ngstorage": "~0.3.0"
+  }
+}
