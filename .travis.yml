@@ -1,5 +1,14 @@
 language: node_js
 node_js:
-  - "0.12"
-  - "0.11"
-  - "0.10"
+- '0.12'
+- '0.11'
+- '0.10'
+deploy:
+  provider: openshift
+  user: andrea.spadaccini@gmail.com
+  password:
+    secure: uRTCyaMO3t9OcsjN2C44TJuJnzIPzaoUr2ddzb5sc97JaN9wqOmNGovLG7TEdbmA5pTWoytbHULhkKspeNHgMYMSV6VTBlqpi6fwCiHLfUyrZRHhlIrn8WFZWPYtUt3TOS5LncW3tdF0qMs+GtfTKzixCt4gTfvV2mHpoPpSLv8=
+  app: dbt
+  domain: horsemeat
+  on:
+    repo: horsemeat/dublin-bus-tracker
