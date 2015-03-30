@@ -1,7 +1,7 @@
 {
   "name": "dublin-bus-tracker",
   "version": "0.1.0",
-  "description": "Simple app to show the next Dublin Bus on a dashboard.",
+  "description": "Simple app to show the next Dublin Bus on a dashboard",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
