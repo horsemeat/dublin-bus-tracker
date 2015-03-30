@@ -22,5 +22,6 @@ mocha.describe('Test get all buses', function(){
     func.getAllBuses("3656", "43", function(results) {
          assert.equal(["23:09"], results)
          mocha.done();
+         bus_response.done();
     })
 });
