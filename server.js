@@ -1,0 +1,80 @@
+//
+// # SimpleServer
+//
+// A simple chat server using Socket.IO, Express, and Async.
+//
+var http = require('http');
+var path = require('path');
+
+var async = require('async');
+var express = require('express');
+var request = require('request');
+var cheerio = require('cheerio');
+var socketio = require('socket.io');
+
+//
+// ## SimpleServer `SimpleServer(obj)`
+//
+// Creates a new instance of SimpleServer with the following options:
+//  * `port` - The HTTP port to listen on. If `process.env.PORT` is set, _it overrides this value_.
+//
+var router = express();
+var server = http.createServer(router);
+var io = socketio.listen(server);
+
+var messages = [];
+var sockets = [];
+
+function getAllBuses(stop, bus_number, result_callback) {
+  var url_template = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=";
+  var url = url_template + stop;
+  var results = [];
+  request.get(url, function(err, response, result) {
+    $ = cheerio.load(result);
+    console.log("after load");
+    $("#rtpi-results tr").each(function(i, tr) {
+      var bus = $(tr).find("td").eq(0).text().trim();
+      var time = $(tr).find("td").eq(2).text().trim();
+      if (bus === bus_number) {
+        if (time === "Due") {
+          results.push(new Date().getHours() + ":" + new Date().getMinutes())
+        } else {
+          results.push($(tr).find("td").eq(2).text().trim());
+        }
+      }
+    });
+    result_callback(results);
+  });
+}
+
+router.use(express.static(path.resolve(__dirname, 'client')));
+var sockets = [];
+
+function pushBuses() {
+  getAllBuses("3705", "41c", function(results) {
+    console.log("Pushing data to clients: " + results);
+    broadcast("bus", results);
+  });
+}
+
+server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
+  var addr = server.address();
+  console.log("Bus server listening at", addr.address + ":" + addr.port);
+  setInterval(pushBuses, 30000)
+});
+
+io.on('connection', function (socket) {
+  sockets.push(socket);
+  console.log("New connection: " + sockets.indexOf(socket))
+  pushBuses();
+
+  socket.on('disconnect', function () {
+    sockets.splice(sockets.indexOf(socket), 1);
+  });
+});
+
+function broadcast(event, data) {
+  sockets.forEach(function (socket) {
+    socket.emit(event, data);
+  });
+}

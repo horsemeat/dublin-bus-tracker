@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" ng-app>
+  <head>
+    <title>Next bus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+    <style>
+      body {
+        padding-top: 60px;
+      }
+       h1 {
+         text-align: center;
+         font-size: 15em;
+         padding-top: 400px;
+       }
+       h2 {
+         text-align: center;
+         font-size: 5em;
+         padding-top: 100px;
+       }
+    </style>
+    <script>
+      function getInterval(time) {
+        var bus_time = (moment(time, "HH:mm").unix() - moment().unix()) * 1000;
+        return moment.duration(bus_time).humanize();
+      }
+      function BusController($scope) {
+        var socket = io.connect();
+
+        $scope.next_bus_time = 'never';
+        $scope.all_bus_times = [];
+
+        socket.on('connect', function () {
+          console.log("connected");
+        });
+
+        socket.on('bus', function (msg) {
+          console.log(msg);
+          if (msg.length > 0) {
+            $scope.$apply(function() {
+              $scope.next_bus_time = getInterval(msg[0])
+              $scope.all_bus_times = msg.slice(1).map(getInterval);
+            })
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container" ng-controller="BusController">
+      <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar-inner">
+          <div class="pull-right">
+            Next Bus
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <h1>{{next_bus_time}}</h1>
+      </div>
+      <div class="row">
+        <h2 ng-repeat="bus_time in all_bus_times">{{bus_time}}</h2>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+  </body>
+</html>
