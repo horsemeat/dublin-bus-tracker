@@ -14,18 +14,18 @@
         return moment.duration(bus_time).humanize();
     }
     
-    angular.module('DublinBusTrackerApp').controller('MainController', ['$scope', function($scope) {
+    angular.module('DublinBusTrackerApp').controller('MainController', ['$scope', 'webSocket', function($scope, webSocket) {
         
-        var socket = io.connect();
+        //var socket = io.connect();
 
         $scope.next_bus_time = 'never';
         $scope.all_bus_times = [];
 
-        socket.on('connect', function () {
+        webSocket.on('connect', function () {
           console.log("connected");
         });
 
-        socket.on('bus', function (msg) {
+        webSocket.on('bus', function (msg) {
           console.log(msg);
           if (msg.length > 0) {
             $scope.$apply(function() {

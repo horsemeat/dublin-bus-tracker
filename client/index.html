@@ -26,19 +26,19 @@
             <div class="form-group">
               <label for="inputStopId" class="col-sm-6 control-label">Stop ID:</label>
               <div class="col-sm-6">
-                <input type="text" ng-model="$storage.stopId" class="form-control" id="inputStopId" placeholder="3656">
+                <input type="text" ng-model="$storage.stopId" class="form-control" id="inputStopId" ng-model-options="{ updateOn: 'blur' }" placeholder="3656">
               </div>
             </div>
             <div class="form-group">
               <label for="inputBusName" class="col-sm-6 control-label">Bus name:</label>
               <div class="col-sm-6">
-                <input type="text" ng-model="$storage.busName" class="form-control" id="inputBusName" placeholder="41c">
+                <input type="text" ng-model="$storage.busName" class="form-control" id="inputBusName" ng-model-options="{ updateOn: 'blur' }" placeholder="41c">
               </div>
             </div>
             <div class="form-group">
               <label for="inputWarningTime" class="col-sm-6 control-label">Warn if less than:</label>
               <div class="col-sm-6">
-                <input type="number" ng-model="$storage.warningTime" class="form-control" id="inputWarningTime" placeholder="10">
+                <input type="number" ng-model="$storage.warningTime" class="form-control" id="inputWarningTime" ng-model-options="{ updateOn: 'blur' }" placeholder="10">
               </div>
             </div>
           </form>
@@ -61,6 +61,7 @@
     
     <script src="/bower_components/bootstrap-drawer/dist/js/drawer.min.js"></script>
     <script src="/bower_components/ngstorage/ngStorage.min.js"></script>
+    <script src="/bower_components/angular-socket-io/socket.min.js"></script>
     
     <script src="js/app.js"></script>
     <script src="js/controllers/main.js"></script>

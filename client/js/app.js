@@ -9,7 +9,10 @@
     'use strict';
     
     angular
-        .module('DublinBusTrackerApp', ['ngStorage'])
+        .module('DublinBusTrackerApp', ['ngStorage', 'btford.socket-io'])
+        .factory('webSocket', function (socketFactory) {
+            return socketFactory();
+        })
         .run(['$window', function($window) {
              angular.element('[data-toggle="offcanvas"]').click(function () {
                 angular.element('.row-offcanvas').toggleClass('active')

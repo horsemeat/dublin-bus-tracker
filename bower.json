@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "bootstrap-drawer": "~1.0.1",
-    "ngstorage": "~0.3.0"
+    "ngstorage": "~0.3.0",
+    "angular-socket-io": "~0.7.0"
   }
 }
