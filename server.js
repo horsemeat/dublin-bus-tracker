@@ -14,7 +14,7 @@ var io = socketio.listen(server);
 var messages = [];
 var sockets = [];
 
-var getAllBuses = function(stop, bus_number, result_callback) {
+exports.getAllBuses = function(stop, bus_number, result_callback) {
   var url_template = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=";
   var url = url_template + stop;
   var results = [];
