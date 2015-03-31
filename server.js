@@ -1,7 +1,6 @@
 var http = require('http');
 var path = require('path');
 
-var async = require('async');
 var express = require('express');
 var request = require('request');
 var cheerio = require('cheerio');
