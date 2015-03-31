@@ -15,12 +15,9 @@ var io = socketio.listen(server);
 var messages = [];
 var sockets = [];
 
-function getInterval(time) {
-  var bus_time = (moment(time, "HH:mm").unix() - moment().unix()) * 1000;
-  return moment.duration(bus_time).humanize();
-}
-
 function getAllBuses(stop, bus_number, result_callback) {
+  var stop = stop.toLowerCase();
+  var bus_number = bus_number.toLowerCase();
   var url_template = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=";
   var url = url_template + stop;
   var results = [];
@@ -28,7 +25,7 @@ function getAllBuses(stop, bus_number, result_callback) {
     $ = cheerio.load(result);
     console.log("after load");
     $("#rtpi-results tr").each(function(i, tr) {
-      var bus = $(tr).find("td").eq(0).text().trim();
+      var bus = $(tr).find("td").eq(0).text().trim().toLowerCase();
       
       // Skip unwanted rows.
       if (bus === bus_number) {
@@ -36,12 +33,15 @@ function getAllBuses(stop, bus_number, result_callback) {
         if (expected_time === "Due") {
           expected_time = new Date().getHours() + ":" + new Date().getMinutes();
         }
-        var expected_wait = getInterval(expected_time);
+        expected_time = moment(expected_time, "HH:mm");
+        
+        var expected_wait = moment.duration(+expected_time - +moment());
+        
         var return_object = {
           "busName": bus,
           "stopId": stop,
-          "expectedTime": expected_time,
-          "expectedWait": expected_wait
+          "expectedTime": expected_time.toISOString(),
+          "expectedWait": expected_wait.toISOString()
         };
         results.push(return_object);
       }
@@ -56,7 +56,7 @@ var sockets = [];
 
 function pushBuses() {
   getAllBuses("3705", "41c", function(results) {
-    console.log("Pushing data to clients: " + results);
+    //console.log("Pushing data to clients: " + JSON.stringify(results,null,'\t'));
     broadcast("bus", results);
   });
 }
