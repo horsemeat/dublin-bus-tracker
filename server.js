@@ -12,7 +12,8 @@ var router = express();
 var server = http.createServer(router);
 var io = socketio.listen(server);
 
-var sockets = [];
+// Map of socket object to client parameters.
+var clients = [];
 
 function getAllBuses(stop, bus_number, result_callback) {
   var stop = stop.toLowerCase();
@@ -75,17 +76,19 @@ server.listen(server_port, server_ip, function(){
 });
 
 io.on('connection', function (socket) {
-  sockets.push(socket);
-  console.log("New connection: " + sockets.indexOf(socket))
+  // Empty options for now.
+  clients[socket.id] = {"socket": socket};
+  
+  console.log("New connection: " + socket.id);
   pushBuses();
 
   socket.on('disconnect', function () {
-    sockets.splice(sockets.indexOf(socket), 1);
+    delete clients[socket.id];
   });
 });
 
 function broadcast(event, data) {
-  sockets.forEach(function (socket) {
-    socket.emit(event, data);
-  });
+  for (var socket_id in clients) {
+    clients[socket_id].socket.emit(event, data);
+  }
 }
