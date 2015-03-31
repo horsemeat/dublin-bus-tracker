@@ -35,8 +35,13 @@ function getAllBuses(stop, bus_number, result_callback) {
         }
         expected_time = moment(expected_time, "HH:mm");
         
-        var expected_wait = moment.duration(+expected_time - +moment());
+        var now = moment();
+        var expected_wait = moment.duration(0);
         
+        if(expected_time.isAfter(now)) {
+          expected_wait = moment.duration(+expected_time - +now);
+        }
+
         var return_object = {
           "busName": bus,
           "stopId": stop,
