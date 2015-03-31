@@ -29,5 +29,8 @@ node_modules
 # Bower components
 bower_components
 
-# Cloud9
+# Cloud9 support folder
 .c9
+
+# Travis CI / OpenShift deploy support folder
+.dpl
