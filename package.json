@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "postinstall": "bower install"
+    "postinstall": "HOME=$OPENSHIFT_DATA_DIR bower install"
   },
   "repository": {
     "type": "git",
