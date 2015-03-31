@@ -8,8 +8,8 @@
 (function(angular, undefined) {
     'use strict';
     
-    angular.module('DublinBusTrackerApp').controller('MenuController', ['$scope', '$window', '$localStorage', 'webSocket', function($scope, $window, $localStorage, webSocket) {
-        $scope.$storage = $localStorage.$default({
+    angular.module('DublinBusTrackerApp').controller('MenuController', ['$scope', '$window', '$localStorage', 'webSocket', '$rootScope', function($scope, $window, $localStorage, webSocket, $rootScope) {
+        $rootScope.$storage = $localStorage.$default({
             busName: '41c',
             stopId: '3705',
             warningTime: 10

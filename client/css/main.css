@@ -12,5 +12,21 @@
     font-size: 20vw;
 }
 .container-fluid h2 {
-    font-size: 4vw;
+    font-size: 80px;
+}
+
+.container-fluid h1 {
+  -webkit-transition:all linear 0.2s;
+  -moz-transition:all linear 0.2s;
+  transition:all linear 0.2s;
+}
+
+.container-fluid h1.update {
+  background: yellow;
+}
+.container-fluid h1 small, 
+.container-fluid h2 small {
+  vertical-align: super;
+  font-size: 50%;
+  color: lightgray;
 }

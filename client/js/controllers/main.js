@@ -11,23 +11,26 @@
         
         //var socket = io.connect();
 
-        $scope.next_bus_time = 'never';
-        $scope.all_bus_times = [];
-
         webSocket.on('connect', function () {
           console.log("connected");
         });
 
-        webSocket.on('bus', function (msg) {
-          console.log(msg);
-          if (msg.length > 0) {
-            $scope.$apply(function() {
-              $scope.next_bus_time = msg[0].expectedWait;
-              $scope.all_bus_times = msg.slice(1);
-            })
-          }
+        webSocket.on('bus', function (data) {
+          console.log(data);
+          
+          $scope.$apply(function() {
+            if (data.length > 0) {
+              $scope.nextBus = data.slice(0,1).pop();
+              $scope.otherBuses = data.slice(1);
+            } else {
+              $scope.nextBus = null;
+              $scope.otherBuses = {};
+            }
+            
+          });
+          
         });
-        
+      
     }]);
 
     

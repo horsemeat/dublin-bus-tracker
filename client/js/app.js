@@ -9,7 +9,7 @@
     'use strict';
     
     angular
-        .module('DublinBusTrackerApp', ['ngStorage', 'btford.socket-io'])
+        .module('DublinBusTrackerApp', ['ngStorage', 'ngAnimate', 'btford.socket-io'])
         .factory('webSocket', function (socketFactory) {
             return socketFactory();
         })
