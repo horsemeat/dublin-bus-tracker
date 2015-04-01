@@ -3,7 +3,7 @@ var url = "/en/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquer
 var fs = require('fs');
 var dublin_html = ""
 
-fs.readFile('dublin_bus.html', 'utf8', function (err,data) {
+fs.readFile('test/dublin_bus.html', 'utf8', function (err,data) {
   if (err) {
     return console.log(err);
   }
@@ -16,12 +16,10 @@ var bus_response = nock('http://www.dublinbus.ie')
 
 var mocha = require("mocha")
 var assert = require("assert")
-var func = require('../server.js')
+var func = require('../bus_utils.js')
 
 mocha.describe('Test get all buses', function(){
     func.getAllBuses("3656", "43", function(results) {
          assert.equal(["23:09"], results)
-         mocha.done();
-         bus_response.done();
     })
 });
