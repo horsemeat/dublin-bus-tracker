@@ -19,7 +19,7 @@ var express = require('express');
 var request = require('request');
 var cheerio = require('cheerio');
 var socketio = require('socket.io');
-var moment = require('moment');
+var moment = require('moment-timezone');
 
 var router = express();
 var server = http.createServer(router);
@@ -66,9 +66,10 @@ function fetchBuses() {
           if (expected_time_txt === "Due") {
             expected_time_txt = new Date().getHours() + ":" + new Date().getMinutes();
           }
-          var expected_time = moment(expected_time_txt, "HH:mm");
-          
-          var now = moment();
+          var expected_time = moment.tz(expected_time_txt, 'HH:mm', 'Europe/Dublin').utc();
+
+          var now = moment.utc();
+          console.log(now.format());
           var expected_wait = moment.duration(0);
           
           if(expected_time.isAfter(now)) {
