@@ -52,6 +52,7 @@ function fetchBuses() {
     var url = url_template + stop;
     
     request.get(url, function(error, response, result) {
+      // Clear RTPI data for this stop.
       rtpi_data[stop] = [];
       if (error || response.statusCode != 200){
         var error_data = {
@@ -62,9 +63,6 @@ function fetchBuses() {
       }else{
         $ = cheerio.load(result);
         console.log("after load stop " + stop);
-        
-        // Clear RTPI data for this stop.
-        rtpi_data[stop] = [];
         $("#rtpi-results tr").each(function(i, tr) {
           var bus = $(tr).find("td").eq(0).text().trim().toLowerCase();
           
@@ -91,10 +89,6 @@ function fetchBuses() {
               "expectedTime": expected_time.toISOString(),
               "expectedWait": expected_wait.toISOString()
             };
-            
-            if (!(stop in rtpi_data)) {
-              rtpi_data[stop] = [];
-            }
             
             rtpi_data[stop].push(bus_data);
             console.log("Added data about " + stop + " (" + bus + " @ " + expected_time_txt + ")");
@@ -125,12 +119,16 @@ function pushBuses() {
       continue;
     }
     
+    
     var busData = rtpi_data[clientData.stopId];
     var result = [];
     for (var i = 0; i < busData.length; ++i) {
       var bus = busData[i];
       if (bus.busName === clientData.busName) {
         console.log("Sending data about " + bus.busName + "@" + bus.expectedTimeTxt);
+        result.push(bus);
+      }else if(bus.error){
+        console.log("Sending error.");
         result.push(bus);
       }
     }
