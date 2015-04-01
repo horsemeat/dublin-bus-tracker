@@ -43,7 +43,7 @@ var rtpi_data = {};
 
 // Fetches all the required info for all the tracked_stops from the Dublin Bus 
 // site, and puts it in rtpi_data.
-var fetchBuses = function() {
+function fetchBuses() {
   var url_template = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=";
   
   console.log("Start fetchBuses()");
@@ -51,47 +51,56 @@ var fetchBuses = function() {
     console.log("fetching data for " + stop);
     var url = url_template + stop;
     
-    request.get(url, function(unused_err, unused_response, result) {
-      $ = cheerio.load(result);
-      console.log("after load stop " + stop);
-      
-      // Clear RTPI data for this stop.
+    request.get(url, function(error, response, result) {
       rtpi_data[stop] = [];
-      $("#rtpi-results tr").each(function(i, tr) {
-        var bus = $(tr).find("td").eq(0).text().trim().toLowerCase();
+      if (error || response.statusCode != 200){
+        var error_data = {
+          "error": "error message from server"
+        };
+        console.log("Error from dublin bus server: " + error);
+        rtpi_data[stop].push(error_data);
+      }else{
+        $ = cheerio.load(result);
+        console.log("after load stop " + stop);
         
-        // Skip the header row.
-        if (bus !== "Route" && bus !== "") {
-          var expected_time_txt = $(tr).find("td").eq(2).text().trim();
-          if (expected_time_txt === "Due") {
-            expected_time_txt = new Date().getHours() + ":" + new Date().getMinutes();
-          }
-          var expected_time = moment.tz(expected_time_txt, 'HH:mm', 'Europe/Dublin').utc();
-
-          var now = moment.utc();
-          console.log(now.format());
-          var expected_wait = moment.duration(0);
+        // Clear RTPI data for this stop.
+        rtpi_data[stop] = [];
+        $("#rtpi-results tr").each(function(i, tr) {
+          var bus = $(tr).find("td").eq(0).text().trim().toLowerCase();
           
-          if(expected_time.isAfter(now)) {
-            expected_wait = moment.duration(+expected_time - +now);
-          }
+          // Skip the header row.
+          if (bus !== "Route" && bus !== "") {
+            var expected_time_txt = $(tr).find("td").eq(2).text().trim();
+            if (expected_time_txt === "Due") {
+              expected_time_txt = new Date().getHours() + ":" + new Date().getMinutes();
+            }
+            var expected_time = moment.tz(expected_time_txt, 'HH:mm', 'Europe/Dublin').utc();
   
-          var bus_data = {
-            "busName": bus,
-            "stopId": stop,
-            "expectedTimeTxt": expected_time_txt,
-            "expectedTime": expected_time.toISOString(),
-            "expectedWait": expected_wait.toISOString()
-          };
-          
-          if (!(stop in rtpi_data)) {
-            rtpi_data[stop] = [];
+            var now = moment.utc();
+            console.log(now.format());
+            var expected_wait = moment.duration(0);
+            
+            if(expected_time.isAfter(now)) {
+              expected_wait = moment.duration(+expected_time - +now);
+            }
+    
+            var bus_data = {
+              "busName": bus,
+              "stopId": stop,
+              "expectedTimeTxt": expected_time_txt,
+              "expectedTime": expected_time.toISOString(),
+              "expectedWait": expected_wait.toISOString()
+            };
+            
+            if (!(stop in rtpi_data)) {
+              rtpi_data[stop] = [];
+            }
+            
+            rtpi_data[stop].push(bus_data);
+            console.log("Added data about " + stop + " (" + bus + " @ " + expected_time_txt + ")");
           }
-          
-          rtpi_data[stop].push(bus_data);
-          console.log("Added data about " + stop + " (" + bus + " @ " + expected_time_txt + ")");
-        }
-      });
+        });
+      }
     });
   }
 }
