@@ -15,16 +15,21 @@
             warningTime: 10
         });
         
+        $scope.$watchGroup(['$storage.busName', '$storage.stopId'], changeParams);
+        
         if( !$rootScope.$storage.busName.length || !$rootScope.$storage.stopId.length ) {
             $rootScope.isSettingsOpen = true;
         }
+
+        function changeParams() {
+            if( !$rootScope.$storage.busName.length || !$rootScope.$storage.stopId.length ) return;
+            
+            webSocket.emit('changeParams', {
+                stopId: $rootScope.$storage.stopId,
+                busName: $rootScope.$storage.busName
+            });
+        }
         
-        $scope.$watchGroup(['$storage.busName', '$storage.stopId'], function(v) {
-           webSocket.emit('changeParams', {
-               busName: v[0],
-               stopId: v[1]
-           });
-        });
     }]);
 
 })(angular);
