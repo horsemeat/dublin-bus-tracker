@@ -13,7 +13,7 @@
   </head>
   
   <body class="has-drawer">
-    <div id="drawerExample" class="drawer dw-xs-10 dw-sm-6 dw-md-2 fold" aria-labelledby="drawerExample">
+    <div id="drawerExample" class="drawer dw-xs-10 dw-sm-6 dw-md-2 fold" ng-class="{open: isSettingsOpen}" ng-init="isSettingsOpen = false" aria-labelledby="drawerExample">
       <div class="drawer-controls">
         <a href="#drawerExample" data-toggle="drawer" href="#drawerExample" aria-foldedopen="false" aria-controls="drawerExample" class="btn btn-default"><i class="fa fa-bars"></i></a>
       </div>
@@ -26,13 +26,13 @@
             <div class="form-group">
               <label for="inputStopId" class="col-sm-6 control-label">Stop ID:</label>
               <div class="col-sm-6">
-                <input type="text" ng-model="$storage.stopId" class="form-control" id="inputStopId" ng-model-options="{ updateOn: 'blur' }" placeholder="3656">
+                <input type="text" ng-model="$storage.stopId" class="form-control" id="inputStopId" ng-model-options="{ updateOn: 'blur' }" placeholder="" required>
               </div>
             </div>
             <div class="form-group">
               <label for="inputBusName" class="col-sm-6 control-label">Bus name:</label>
               <div class="col-sm-6">
-                <input type="text" ng-model="$storage.busName" class="form-control" id="inputBusName" ng-model-options="{ updateOn: 'blur' }" placeholder="41c">
+                <input type="text" ng-model="$storage.busName" class="form-control" id="inputBusName" ng-model-options="{ updateOn: 'blur' }" placeholder="" required>
               </div>
             </div>
             <div class="form-group">

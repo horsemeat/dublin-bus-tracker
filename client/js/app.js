@@ -14,7 +14,7 @@
             return socketFactory();
         })
         .run(['$window', function($window) {
-             angular.element('[data-toggle="offcanvas"]').click(function () {
+            angular.element('[data-toggle="offcanvas"]').click(function () {
                 angular.element('.row-offcanvas').toggleClass('active')
             });
         }]);

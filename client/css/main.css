@@ -30,3 +30,6 @@
   font-size: 50%;
   color: lightgray;
 }
+.ng-invalid {
+  border-color:#dd4b39;
+}

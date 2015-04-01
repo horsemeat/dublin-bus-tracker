@@ -10,10 +10,14 @@
     
     angular.module('DublinBusTrackerApp').controller('MenuController', ['$scope', '$window', '$localStorage', 'webSocket', '$rootScope', function($scope, $window, $localStorage, webSocket, $rootScope) {
         $rootScope.$storage = $localStorage.$default({
-            busName: '41c',
-            stopId: '3705',
+            busName: '',
+            stopId: '',
             warningTime: 10
         });
+        
+        if( !$rootScope.$storage.busName.length || !$rootScope.$storage.stopId.length ) {
+            $rootScope.isSettingsOpen = true;
+        }
         
         $scope.$watchGroup(['$storage.busName', '$storage.stopId'], function(v) {
            webSocket.emit('changeParams', {
