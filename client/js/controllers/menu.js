@@ -10,6 +10,7 @@
     
     angular.module('DublinBusTrackerApp').controller('MenuController', ['$scope', '$window', '$localStorage', 'webSocket', '$rootScope', function($scope, $window, $localStorage, webSocket, $rootScope) {
         var unwatch = angular.noop();
+        var timerPromise = null;
 
         $rootScope.$storage = $localStorage.$default({
             busName: '',
@@ -24,7 +25,7 @@
         $scope.$on('socket:disconnect', function() {
             unwatch();
         });
-
+        
         if( !$rootScope.$storage.busName.length || !$rootScope.$storage.stopId.length ) {
             $rootScope.isSettingsOpen = true;
         }

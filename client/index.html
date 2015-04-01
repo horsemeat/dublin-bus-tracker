@@ -38,7 +38,7 @@
             <div class="form-group">
               <label for="inputWarningTime" class="col-sm-6 control-label">Warn if less than:</label>
               <div class="col-sm-6">
-                <input type="number" ng-model="$storage.warningTime" class="form-control" id="inputWarningTime" ng-model-options="{ updateOn: 'blur' }" placeholder="10">
+                <input type="number" ng-model="$storage.warningTime" class="form-control" id="inputWarningTime" placeholder="">
               </div>
             </div>
             <div class="alert alert-danger" role="alert" ng-if="!isConnected">You are offline.</div>
@@ -49,7 +49,7 @@
     <div class="container-fluid" ng-controller="MainController">
       <div class="circle" ng-class="{ green: isConnected, red: !isConnected }"></div>
       <div class="row" ng-cloak>
-        <h1 countdown="nextBus.expectedWait">{h}<small>H</small> {m}<small>M</small> {s}<small>S</small></h1>
+        <h1 ng-class="{ 'alert-danger': isRunningOutOfTime }"  countdown="nextBus.expectedWait">{h}<small>H</small> {m}<small>M</small> {s}<small>S</small></h1>
         <h2><small>Next {{$storage.busName}} to {{$storage.stopId}}</small></h2>
         <h2 ng-repeat="otherBus in otherBuses" countdown="otherBus.expectedWait">{h}<small>H</small> {m}<small>M</small></h2>
         <h2 ng-if="otherBuses.length===0">None</h2>

@@ -20,6 +20,7 @@
         })
         .run(['$window', '$rootScope', function($window, $rootScope) {
             $rootScope.isConnected = false;
+            $rootScope.isRunningOutOfTime = false;
             
             $rootScope.$on('socket:connect', function () {
               $rootScope.isConnected = true;

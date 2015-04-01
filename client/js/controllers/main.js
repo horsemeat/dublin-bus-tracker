@@ -7,7 +7,7 @@
 
 (function(angular, undefined) {
     'use strict';
-    angular.module('DublinBusTrackerApp').controller('MainController', ['$scope', function($scope) {
+    angular.module('DublinBusTrackerApp').controller('MainController', ['$scope', '$interval', '$rootScope', function($scope, $interval, $rootScope) {
         
         $scope.$on('socket:bus', function (event, data) {
           console.log(data);
@@ -19,7 +19,23 @@
             $scope.otherBuses = {};
           }
         });
-      
+        
+        //$timeout        
+        $interval(function() {
+          
+          if(!$scope.nextBus) return;
+          
+          console.log(moment.utc($scope.nextBus.expectedTime).diff(moment.utc(), 'minutes'));
+          console.log(moment.utc($scope.nextBus.expectedTime).format());
+          console.log(moment.utc().format());
+
+          if( moment($scope.nextBus.expectedTime).diff(moment.utc(), 'minutes') <= $scope.$storage.warningTime ) {
+            $rootScope.isRunningOutOfTime = true;
+          } else {
+            $rootScope.isRunningOutOfTime = false;
+          }
+        }, 1000);
+        
     }]);
 
     
