@@ -13,6 +13,7 @@
 
         webSocket.on('connect', function () {
           console.log("connected");
+          webSocket.emit('changeParams', {"stopId": "3705", "busName": "41c"})  ;
         });
 
         webSocket.on('bus', function (data) {
@@ -28,7 +29,7 @@
             }
             
           });
-          
+         
         });
       
     }]);

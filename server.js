@@ -1,3 +1,17 @@
+// Node.js server for the Dublin Bus Tracker app.
+//
+// The client/server protocol works as follows:
+// 1. The client connects.
+// 2. The client sends a 'changeParams' request, containing a stop number and
+//    a bus number about which they want to be notified 
+//   {"stopId": string, "busName": string}
+// 3. The server will periodically send a 'bus' message containing info about
+//   the requested entities, as a list of 
+//   { "busName": string, "stopId": string, "expectedTime": string, 
+//     "expectedTimeTxt": string, "expectedWait": string}
+// 4. The client can send more 'changeParams' messages to modify the data they
+//    want to receive from the client.
+// 5. The client disconnects.
 var http = require('http');
 var path = require('path');
 
@@ -15,33 +29,35 @@ var io = socketio.listen(server);
 var fetch_timeout_ms = 30000;
 var push_timeout_ms = 5000;
 
-// Map of socket object to client parameters.
+// Map of socket object to client parameters. stopId and busName will be empty
+// if no changeParams request has been received for the given client.
 var clients = [];
 
-// List of stops currently tracked.
-var tracked_stops = [];
+// Set of stops currently tracked. Map from stopId to number of clients tracking
+// it.
+var tracked_stops = {};
 
 // Data fetched from RTPI. Map from stop number to a list of 
-// (busName, expectedTime, expectedWait).
-var rtpi_data = [];
+// (busName, expectedTime, expectedTimeTxt, expectedWait).
+var rtpi_data = {};
 
 // Fetches all the required info for all the tracked_stops from the Dublin Bus 
 // site, and puts it in rtpi_data.
 function fetchBuses() {
   var url_template = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=";
   
-  // Clear rtpi_data.
-  rtpi_data.length = 0;
-  
-  for (var i = 0; i < tracked_stops.length; i++) {
-    var stop = tracked_stops[i].toLowerCase();
+  console.log("Start fetchBuses()");
+  for (var stop in tracked_stops) {
+    console.log("fetching data for " + stop);
     var url = url_template + stop;
     
     request.get(url, function(unused_err, unused_response, result) {
       $ = cheerio.load(result);
       console.log("after load stop " + stop);
+      
+      // Clear RTPI data for this stop.
+      rtpi_data[stop] = [];
       $("#rtpi-results tr").each(function(i, tr) {
-        console.log(i + ": " + tr.toString());
         var bus = $(tr).find("td").eq(0).text().trim().toLowerCase();
         
         // Skip the header row.
@@ -62,6 +78,7 @@ function fetchBuses() {
           var bus_data = {
             "busName": bus,
             "stopId": stop,
+            "expectedTimeTxt": expected_time_txt,
             "expectedTime": expected_time.toISOString(),
             "expectedWait": expected_wait.toISOString()
           };
@@ -82,8 +99,15 @@ router.use('/bower_components',  express.static(__dirname + '/bower_components')
 router.use(express.static(path.resolve(__dirname, 'client')));
 
 function pushBuses() {
+  console.log("Start pushBuses");
   for (var socket_id in clients) {
+    console.log("Pushing to " + socket_id);
     var clientData = clients[socket_id];
+    
+    if (clientData.stopId === "") {
+      console.log("No changeParams for client " + socket_id + ".");
+      continue;
+    }
     
     if (!(clientData.stopId in rtpi_data)) {
       console.warn("No data yet for stop " + clientData.stopId + 
@@ -96,6 +120,7 @@ function pushBuses() {
     for (var i = 0; i < busData.length; ++i) {
       var bus = busData[i];
       if (bus.busName === clientData.busName) {
+        console.log("Sending data about " + bus.busName + "@" + bus.expectedTimeTxt);
         result.push(bus);
       }
     }
@@ -118,18 +143,27 @@ server.listen(server_port, server_ip, function(){
 io.on('connection', function (socket) {
   console.log("New connection: " + socket.id);
   
-  // All clients are interested in bus 41c on stop 3705 for now.
-  // TODO: implement an endpoint to change the client parameters.
-  var clientData = {"socket": socket, "stopId": "3705", "busName": "41c"};
+  var clientData = {"socket": socket, "stopId": "", "busName": ""};
   clients[socket.id] = clientData;
   
-  if (!(clientData.stopId in tracked_stops)) {
-    tracked_stops.push(clientData.stopId);
-  }
+  socket.on('changeParams', function(params) {
+    console.log('changeParams for ' + socket.id)
+    
+    // TODO: remove the old stop from tracked_stops, if necessary.
+    clients[socket.id].stopId = params.stopId.toLowerCase();
+    clients[socket.id].busName = params.busName.toLowerCase();
+    
+    var stopId = clients[socket.id].stopId;
+    
+    if (!(stopId in tracked_stops)) {
+      tracked_stops[stopId] = 0;
+    }
+    tracked_stops[stopId]++;
+    
+    // Fetch data immediately, so we can serve it to the client.
+    fetchBuses();
+  });
   
-  // Fetch data immediately, so we can serve it to the new client.
-  fetchBuses();
-
   socket.on('disconnect', function () {
     // TODO: remove stops from tracked_stops, if necessary.
     delete clients[socket.id];
