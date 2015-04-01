@@ -11,12 +11,28 @@
     angular
         .module('DublinBusTrackerApp', ['ngStorage', 'ngAnimate', 'btford.socket-io'])
         .factory('webSocket', function (socketFactory) {
-            return socketFactory();
+            var webSocket = socketFactory();
+            webSocket.forward('connect')
+            webSocket.forward('disconnect')
+            webSocket.forward('bus')
+            webSocket.on('error', console.error);
+            return webSocket;
         })
-        .run(['$window', function($window) {
+        .run(['$window', '$rootScope', function($window, $rootScope) {
+            $rootScope.isConnected = false;
+            
+            $rootScope.$on('socket:connect', function () {
+              $rootScope.isConnected = true;
+            });
+            
+            $rootScope.$on('socket:disconnect', function () {
+              $rootScope.isConnected = false;
+            });
+            
             angular.element('[data-toggle="offcanvas"]').click(function () {
                 angular.element('.row-offcanvas').toggleClass('active')
             });
+            
         }]);
     
 })(angular);

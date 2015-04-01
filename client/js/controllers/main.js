@@ -7,28 +7,17 @@
 
 (function(angular, undefined) {
     'use strict';
-    angular.module('DublinBusTrackerApp').controller('MainController', ['$scope', 'webSocket', function($scope, webSocket) {
+    angular.module('DublinBusTrackerApp').controller('MainController', ['$scope', function($scope) {
         
-        //var socket = io.connect();
-
-        webSocket.on('connect', function () {
-          console.log("connected");
-        });
-
-        webSocket.on('bus', function (data) {
+        $scope.$on('socket:bus', function (event, data) {
           console.log(data);
-          
-          $scope.$apply(function() {
-            if (data.length > 0) {
-              $scope.nextBus = data.slice(0,1).pop();
-              $scope.otherBuses = data.slice(1);
-            } else {
-              $scope.nextBus = null;
-              $scope.otherBuses = {};
-            }
-            
-          });
-         
+          if (data.length > 0) {
+            $scope.nextBus = data.slice(0,1).pop();
+            $scope.otherBuses = data.slice(1);
+          } else {
+            $scope.nextBus = null;
+            $scope.otherBuses = {};
+          }
         });
       
     }]);
