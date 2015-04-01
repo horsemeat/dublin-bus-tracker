@@ -43,7 +43,7 @@ var rtpi_data = {};
 
 // Fetches all the required info for all the tracked_stops from the Dublin Bus 
 // site, and puts it in rtpi_data.
-function fetchBuses() {
+var fetchBuses = function() {
   var url_template = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=";
   
   console.log("Start fetchBuses()");
