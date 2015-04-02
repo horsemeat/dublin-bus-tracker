@@ -41,6 +41,57 @@ var tracked_stops = {};
 // (busName, expectedTime, expectedTimeTxt, expectedWait).
 var rtpi_data = {};
 
+// Factory function for parsers. Required to avoid the common "create closure in
+// a loop" error.
+function createParser(stop) {
+  return function(error, response, result) {
+    // Clear RTPI data for this stop.
+    rtpi_data[stop] = [];
+    if (error || response.statusCode != 200){
+      var error_data = {
+        "error": "error message from server"
+      };
+      console.log("Error from dublin bus server: " + error);
+      rtpi_data[stop].push(error_data);
+    }else{
+      $ = cheerio.load(result);
+      console.log("after load stop " + stop);
+      $("#rtpi-results tr").each(function(i, tr) {
+        var bus = $(tr).find("td").eq(0).text().trim().toLowerCase();
+        console.log("bus: " + bus);
+        
+        // Skip the header row.
+        if (bus !== "Route" && bus !== "") {
+          var expected_time_txt = $(tr).find("td").eq(2).text().trim();
+          if (expected_time_txt === "Due") {
+            expected_time_txt = new Date().getHours() + ":" + new Date().getMinutes();
+          }
+          var expected_time = moment.tz(expected_time_txt, 'HH:mm', 'Europe/Dublin').utc();
+
+          var now = moment.utc();
+          console.log(now.format());
+          var expected_wait = moment.duration(0);
+          
+          if(expected_time.isAfter(now)) {
+            expected_wait = moment.duration(+expected_time - +now);
+          }
+  
+          var bus_data = {
+            "busName": bus,
+            "stopId": stop,
+            "expectedTimeTxt": expected_time_txt,
+            "expectedTime": expected_time.toISOString(),
+            "expectedWait": expected_wait.toISOString()
+          };
+          
+          rtpi_data[stop].push(bus_data);
+          console.log("Added data about " + stop + " (" + bus + " @ " + expected_time_txt + ")");
+        }
+      });
+    }
+  }
+}
+
 // Fetches all the required info for all the tracked_stops from the Dublin Bus 
 // site, and puts it in rtpi_data.
 function fetchBuses() {
@@ -51,51 +102,7 @@ function fetchBuses() {
     console.log("fetching data for " + stop);
     var url = url_template + stop;
     
-    request.get(url, function(error, response, result) {
-      // Clear RTPI data for this stop.
-      rtpi_data[stop] = [];
-      if (error || response.statusCode != 200){
-        var error_data = {
-          "error": "error message from server"
-        };
-        console.log("Error from dublin bus server: " + error);
-        rtpi_data[stop].push(error_data);
-      }else{
-        $ = cheerio.load(result);
-        console.log("after load stop " + stop);
-        $("#rtpi-results tr").each(function(i, tr) {
-          var bus = $(tr).find("td").eq(0).text().trim().toLowerCase();
-          
-          // Skip the header row.
-          if (bus !== "Route" && bus !== "") {
-            var expected_time_txt = $(tr).find("td").eq(2).text().trim();
-            if (expected_time_txt === "Due") {
-              expected_time_txt = new Date().getHours() + ":" + new Date().getMinutes();
-            }
-            var expected_time = moment.tz(expected_time_txt, 'HH:mm', 'Europe/Dublin').utc();
-  
-            var now = moment.utc();
-            console.log(now.format());
-            var expected_wait = moment.duration(0);
-            
-            if(expected_time.isAfter(now)) {
-              expected_wait = moment.duration(+expected_time - +now);
-            }
-    
-            var bus_data = {
-              "busName": bus,
-              "stopId": stop,
-              "expectedTimeTxt": expected_time_txt,
-              "expectedTime": expected_time.toISOString(),
-              "expectedWait": expected_wait.toISOString()
-            };
-            
-            rtpi_data[stop].push(bus_data);
-            console.log("Added data about " + stop + " (" + bus + " @ " + expected_time_txt + ")");
-          }
-        });
-      }
-    });
+    request.get(url, createParser(stop)); 
   }
 }
 
@@ -118,7 +125,6 @@ function pushBuses() {
                    ". Cannot send data to client " + socket_id);
       continue;
     }
-    
     
     var busData = rtpi_data[clientData.stopId];
     var result = [];
