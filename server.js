@@ -63,7 +63,7 @@ function createParser(stop) {
     }else{
       $ = cheerio.load(result);
       console.log("after load stop " + stop);
-      $("#rtpi-results tr").each(function(i, tr) {
+      $("#rtpi-results tr").each(function(_, tr) {
         var bus = $(tr).find("td").eq(0).text().trim().toLowerCase();
         console.log("bus: " + bus);
         
@@ -96,7 +96,7 @@ function createParser(stop) {
         }
       });
     }
-  }
+  };
 }
 
 // Fetches all the required info for all the tracked_stops from the Dublin Bus 
@@ -168,7 +168,7 @@ io.on('connection', function (socket) {
   clients[socket.id] = clientData;
   
   socket.on('changeParams', function(params) {
-    console.log('changeParams for ' + socket.id)
+    console.log('changeParams for ' + socket.id);
     
     // TODO: remove the old stop from tracked_stops, if necessary.
     clients[socket.id].stopId = params.stopId.toLowerCase();
