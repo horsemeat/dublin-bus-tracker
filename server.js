@@ -13,9 +13,8 @@
 //    want to receive from the client.
 // 5. The client disconnects.
 
-// Monitoring. Must be initialized before http.
-var pmx = require('pmx');
-pmx.init();
+// Monitoring. Must be required before http.
+var monitoring = require('./lib/monitoring.js');
 
 var http = require('http');
 var path = require('path');
@@ -42,29 +41,12 @@ var clients = [];
 // it.
 var tracked_stops = {};
 
+// Initialize monitoring with the state of the server.
+monitoring.init(clients, tracked_stops);
+
 // Data fetched from RTPI. Map from stop number to a list of 
 // (busName, expectedTime, expectedTimeTxt, expectedWait).
 var rtpi_data = {};
-
-// Metrics.
-var probe = pmx.probe();
-
-var stops_count = probe.metric({
-  name: "Number of monitored stops",
-  agg_type: "max",
-  value: function() {
-    return Object.keys(tracked_stops).length;
-  }
-});
-
-var new_client_count = probe.metric({
-  name: "Number of clients",
-  agg_type: "max",
-  value: function() {
-    return Object.keys(clients).length;
-  }
-});
-
 
 // Factory function for parsers. Required to avoid the common "create closure in
 // a loop" error.
