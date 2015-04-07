@@ -51,9 +51,20 @@
                 </div>
               </div>
             </div>
+            <!--
+            <div class="form-group">
+              <div class="col-sm-12">
+                <button class="btn btn-default"><i class="fa fa-heart"></i></button>
+                <a class="btn btn-default" ng-href="http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery={{$storage.stopId}}" target="_blank"><i class="fa fa-sign-out"></i></a>
+              </div>
+            </div>
+            -->
             <div class="alert alert-danger" role="alert" ng-if="!isConnected">You are offline.</div>
           </form>
         </div>
+        <div class="drawer-footer">
+          <small>Made with <i class="fa fa-heart"></i> by the <a href="https://github.com/horsemeat" target="_blank">horsemeat</a> team.</small>
+        </div>        
       </div>
     </div>
     <div class="container-fluid" ng-controller="MainController">
