@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     
     <link rel="stylesheet" href="/bower_components/bootstrap-drawer/dist/css/bootstrap-drawer.min.css">
-    
+    <link rel="stylesheet" href="/bower_components/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css">
+
     <link rel="stylesheet" href="css/main.css">
   </head>
   
@@ -19,10 +20,10 @@
       </div>
       <div class="drawer-contents">
         <div class="drawer-heading">
-          <h2 class="drawer-title">Settings</h2>
+          <h2 class="drawer-title"><i class="fa fa-wrench"></i> Settings</h2>
         </div>
         <div class="drawer-body" ng-controller="MenuController">
-          <form class="form-horizontal">
+          <form class="form-horizontal" role="form">
             <div class="form-group">
               <label for="inputStopId" class="col-sm-6 control-label">Stop ID:</label>
               <div class="col-sm-6">
@@ -39,6 +40,15 @@
               <label for="inputWarningTime" class="col-sm-6 control-label">Warn if less than:</label>
               <div class="col-sm-6">
                 <input type="number" ng-model="$storage.warningTime" class="form-control" id="inputWarningTime" placeholder="">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEnableAudio" class="col-sm-6 control-label">Enable audio:</label>
+              <div class="col-sm-6">
+                <div class="checkbox">
+                  <input type="checkbox" id="inputEnableAudio" ng-model="$storage.isAudioEnabled">
+                  <label for="inputEnableAudio"></label>
+                </div>
               </div>
             </div>
             <div class="alert alert-danger" role="alert" ng-if="!isConnected">You are offline.</div>
@@ -62,9 +72,10 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-animate.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
-    
+
+    <script src="/bower_components/moment/min/moment.min.js"></script>
     <script src="/bower_components/bootstrap-drawer/dist/js/drawer.min.js"></script>
+    <script src="/bower_components/angular-audio/app/angular.audio.js"></script>
     <script src="/bower_components/ngstorage/ngStorage.min.js"></script>
     <script src="/bower_components/angular-socket-io/socket.min.js"></script>
 
