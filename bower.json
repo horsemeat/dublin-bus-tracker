@@ -19,6 +19,8 @@
     "bootstrap-drawer": "~1.0.1",
     "ngstorage": "~0.3.0",
     "angular-socket-io": "~0.7.0",
-    "moment": "~2.9.0"
+    "moment": "~2.9.0",
+    "angular-audio": "~1.6.2",
+    "awesome-bootstrap-checkbox": "~0.3.4"
   }
 }

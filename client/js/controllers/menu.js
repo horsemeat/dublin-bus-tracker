@@ -15,7 +15,8 @@
         $rootScope.$storage = $localStorage.$default({
             busName: '',
             stopId: '',
-            warningTime: 10
+            warningTime: 10,
+            isAudioEnabled: true
         });
         
         $scope.$on('socket:connect', function() {
@@ -32,7 +33,6 @@
 
         function changeParams() {
             if( !$rootScope.$storage.busName.length || !$rootScope.$storage.stopId.length ) return;
-            console.log('changeParams');
             webSocket.emit('changeParams', {
                 stopId: $rootScope.$storage.stopId,
                 busName: $rootScope.$storage.busName

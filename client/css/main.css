@@ -59,3 +59,8 @@
     50% {-webkit-transform: scale(0.9, 0.9); }
     100% {-webkit-transform: scale(1, 1); }
 }
+.drawer-footer {
+  position: absolute;
+  bottom: 0px;
+}
+}
